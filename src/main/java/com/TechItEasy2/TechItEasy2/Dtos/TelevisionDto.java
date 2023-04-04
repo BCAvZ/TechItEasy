@@ -28,6 +28,8 @@ public class TelevisionDto {
     public Integer originalStock;
     public Integer sold;
 
+    public RemoteControllerDto remoteControllerDto;
+
     public static TelevisionDto fromTelevision(Television t){
         var dto = new TelevisionDto();
 

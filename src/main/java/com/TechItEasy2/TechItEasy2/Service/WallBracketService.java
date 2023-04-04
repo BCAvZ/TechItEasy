@@ -85,6 +85,7 @@ public class WallBracketService {
     public static WallBracketDto changeToWallBracketDto(WallBracket rm){
         var dto = new WallBracketDto();
 
+        dto.id = rm.getId();
         dto.adjustable = rm.isAdjustable();
         dto.size = rm.getSize();
         dto.name = rm.getName();

@@ -2,8 +2,8 @@ package com.TechItEasy2.TechItEasy2.Dtos;
 
 public class RemoteControllerDto {
 
-     public Long id;
-     public String compatibleWith;
+    public Long id;
+    public String compatibleWith;
     public String batteryType;
     public String name;
     public String brand;

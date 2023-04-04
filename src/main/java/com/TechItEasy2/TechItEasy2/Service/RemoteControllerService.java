@@ -93,6 +93,7 @@ public class RemoteControllerService {
     public static RemoteControllerDto changeToRemoteControllerDto(RemoteController rm){
         var dto = new RemoteControllerDto();
 
+        dto.id = rm.getId();
         dto.brand = rm.getBrand();
         dto.name = rm.getName();
         dto.price = rm.getPrice();

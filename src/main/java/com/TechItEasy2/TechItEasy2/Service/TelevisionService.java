@@ -3,10 +3,9 @@ package com.TechItEasy2.TechItEasy2.Service;
 import com.TechItEasy2.TechItEasy2.Dtos.TelevisionDto;
 import com.TechItEasy2.TechItEasy2.Dtos.TelevisionInputDto;
 import com.TechItEasy2.TechItEasy2.Models.Television;
+import com.TechItEasy2.TechItEasy2.Repositories.RemoteControllerRepository;
 import com.TechItEasy2.TechItEasy2.Repositories.TelevisionRepository;
 import com.TechItEasy2.TechItEasy2.TechItEasy.Exceptions.RecordNotFoundException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,22 +16,48 @@ import java.util.Optional;
 public class TelevisionService {
 
     private TelevisionRepository repos;
+    private RemoteControllerRepository reposRemoteController;
 
-    public TelevisionService(TelevisionRepository televisionRepository) {
+    private RemoteControllerService remoteControllerService;
+
+    public TelevisionService(TelevisionRepository televisionRepository, RemoteControllerRepository remoteControllerRepository) {
         this.repos = televisionRepository;
+        this.reposRemoteController = remoteControllerRepository;
     }
 
-    public List<TelevisionDto> getTvs(){
+//    public List<TelevisionDto> getTvs(){
+//
+//        Iterable<Television> televisionsToReturn = repos.findAll();
+//        List<TelevisionDto> televisionDtos = new ArrayList<>();
+//
+//        for (Television t : televisionsToReturn ) {
+//            TelevisionDto dto = TelevisionDto.fromTelevision(t);
+//            televisionDtos.add(dto);
+//        }
+//        return televisionDtos;
+//    }
 
-        Iterable<Television> televisionsToReturn = repos.findAll();
+    public List<TelevisionDto> getTvs() {
+        List<Television> tvList = repos.findAll();
+        return transferTvListToDtoList(tvList);
+    }
+
+    public List<TelevisionDto> transferTvListToDtoList(List<Television> televisions){
+
         List<TelevisionDto> televisionDtos = new ArrayList<>();
 
-        for (Television t : televisionsToReturn ) {
+        for (Television t : televisions ) {
             TelevisionDto dto = TelevisionDto.fromTelevision(t);
+
+            if(t.getRemoteController() != null){
+                dto.remoteControllerDto = remoteControllerService.changeToRemoteControllerDto(t.getRemoteController());
+            }
+
             televisionDtos.add(dto);
         }
         return televisionDtos;
     }
+
 
     public TelevisionDto postTv(TelevisionInputDto dto){
 
@@ -75,6 +100,35 @@ public class TelevisionService {
         }
     }
 
+    public void removeTv(Long id){
+
+        Optional<Television> televisionOptional = repos.findById(id);
+        if (televisionOptional.isPresent()) {
+            repos.deleteById(id);
+        } else {
+            throw new RecordNotFoundException("geen televisie gevonden");
+        }
+
+    }
+
+    public void assignRemoteControllerToTelevision(Long id, Long remoteControllerId){
+        var optionalTelevision = repos.findById(id);
+        var optionalRemoteController = reposRemoteController.findById(remoteControllerId);
+
+        if(optionalTelevision.isPresent() && optionalRemoteController.isPresent()) {
+            var television = optionalTelevision.get();
+            var remoteController = optionalRemoteController.get();
+
+            television.setRemoteController(remoteController);
+            repos.save(television);
+        } else {
+            throw new RecordNotFoundException();
+        }
+
+    }
+
+
+
     public Television toTelevision(TelevisionInputDto Dto){
         var t = new Television();
 
@@ -98,16 +152,7 @@ public class TelevisionService {
         return t;
     }
 
-    public void removeTv(Long id){
 
-        Optional<Television> televisionOptional = repos.findById(id);
-        if (televisionOptional.isPresent()) {
-            repos.deleteById(id);
-        } else {
-            throw new RecordNotFoundException("geen televisie gevonden");
-        }
-
-    }
 
 
 

@@ -1,9 +1,6 @@
 package com.TechItEasy2.TechItEasy2.Models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "televisions")
@@ -12,6 +9,10 @@ public class Television {
     @Id
     @GeneratedValue
     private Long tvId;
+
+    @OneToOne
+    RemoteController remoteController;
+
     private String type;
     private String brand;
     private String name;
@@ -50,6 +51,14 @@ public class Television {
         this.ambiLight = ambiLight;
         this.originalStock = originalStock;
         this.sold = sold;
+    }
+
+    public RemoteController getRemoteController() {
+        return remoteController;
+    }
+
+    public void setRemoteController(RemoteController remoteController) {
+        this.remoteController = remoteController;
     }
 
     public Long getTvId() {

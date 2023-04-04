@@ -1,6 +1,7 @@
 package com.TechItEasy2.TechItEasy2.TechItEasy.Controllers;
 
 
+import com.TechItEasy2.TechItEasy2.Dtos.IdInputDto;
 import com.TechItEasy2.TechItEasy2.Dtos.TelevisionDto;
 import com.TechItEasy2.TechItEasy2.Dtos.TelevisionInputDto;
 import com.TechItEasy2.TechItEasy2.Repositories.TelevisionRepository;
@@ -65,6 +66,11 @@ public class TelevisionController {
 
     }
 
+    @PutMapping("{id}/remotecontroller")
+    public ResponseEntity<TelevisionDto> linkTvAndRemote(@PathVariable("id") Long id, @RequestBody IdInputDto remoteControllerId){
+        service.assignRemoteControllerToTelevision(id, remoteControllerId.id);
+        return ResponseEntity.noContent().build();
+    }
 
     // Deze postmap slaat het opgegeven model op in een arraylist NIET in de database
 //    @PostMapping("")

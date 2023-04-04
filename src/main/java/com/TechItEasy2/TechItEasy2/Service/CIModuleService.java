@@ -83,6 +83,7 @@ public class CIModuleService {
     public static CIModuleDto changeToCIModuleDto(CIModule rm){
         var dto = new CIModuleDto();
 
+        dto.id = rm.getId();
         dto.type = rm.getType();
         dto.name = rm.getName();
         dto.price = rm.getPrice();
